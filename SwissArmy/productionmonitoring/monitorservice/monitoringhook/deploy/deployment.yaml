@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitoring-hook
+  labels:
+    app: monitoring-hook
+  namespace: msigmonitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: monitoring-hook
+  template:
+    metadata:
+      labels:
+        app: monitoring-hook
+    spec:
+      containers:
+      - name: monitoring-hook
+        image: 128.21.24.60:8086/msig/monitoring-hook:0.0.2
+        resources:
+          limits:
+            memory: "512M"
+        ports:
+        - name: web
+          containerPort: 8080
+          
+          

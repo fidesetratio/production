@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+    team: devops-by-example
+  name: mail-alert
+spec:
+  groups:
+  - name: mail-alert
+    rules:
+    - alert: mail-alert
+      annotations:
+        description: Memory on node {{ $labels.instance }} currently at {{ $value }}% 
+          is under pressure
+        summary: Memory usage is under pressure, system may become unstable.
+      expr: |
+        kube_node_status_condition{condition="Ready",job="kube-state-metrics",node="node-cosmos-06",status="unknown"} == 0
+      for: 2m
+      labels:
+        severity: specialcase

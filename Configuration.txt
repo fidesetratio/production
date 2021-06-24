@@ -1,0 +1,28 @@
+Production Server
+
+
+Server cosmos 01
+Ip address : 128.21.24.20
+Username : administrator
+Password : P@ssw0rd
+
+Server cosmos 02
+Ip address : 128.21.24.21
+Username : administrator
+Password : P@ssw0rd
+
+hostnamectl set-hostname "cosmos-01"
+
+
+128.21.24.20 cosmos-01
+128.21.24.21 cosmos-02
+
+=============================================================== BACKUP PRODUCTION ================================================
+
+128.21.24.30 ==> COSMOS01 as master
+128.21.24.31 ==> COSMOS02 
+128.21.24.32 ==> COSMOS03
+
+128.21.24.30 cosmos-01
+128.21.24.31 cosmos-02
+128.21.24.32 cosmos-03

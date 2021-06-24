@@ -1,0 +1,36 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: prometheus
+  namespace: msigmonitoring
+spec:
+  alerting:
+    alertmanagers:
+    - name: alertmanager-main
+      namespace: msigmonitoring
+      port: web
+  image: quay.io/prometheus/prometheus:v2.19.2
+  nodeSelector:
+    kubernetes.io/os: linux
+  podMonitorNamespaceSelector: {}
+  podMonitorSelector: {}
+  replicas: 1
+  resources:
+    requests:
+      memory: 400Mi
+  externalLabels:
+    cluster: docker-desktop
+  serviceAccountName: prometheus
+  version: v2.19.2
+  ruleSelector:
+    matchLabels:
+      team: devops-by-example
+  securityContext:
+    fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1000
+  serviceMonitorSelector:
+    matchLabels:
+     team: devops-by-example
+    

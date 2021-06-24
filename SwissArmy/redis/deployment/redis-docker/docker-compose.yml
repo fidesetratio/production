@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+  master:
+    image: redis
+    ports:
+      - 6379:6379
+  slave:
+    image: redis
+    command: redis-server --slaveof master 6379
+    links:
+      - master
+  sentinel:
+    image: redis
+    command: >
+      bash -c "echo 'port 26379' > sentinel.conf &&
+      echo 'dir /tmp' >> sentinel.conf &&
+      echo 'sentinel announce-ip 128.21.33.43' >> sentinel.conf &&
+      echo 'sentinel announce-port 26379' >> sentinel.conf &&
+      echo 'sentinel monitor mymaster 128.21.33.43 6379 2' >> sentinel.conf &&
+      echo 'sentinel down-after-milliseconds mymaster 5000' >> sentinel.conf &&
+      echo 'sentinel parallel-syncs mymaster 1' >> sentinel.conf &&
+      echo 'sentinel failover-timeout mymaster 5000' >> sentinel.conf &&
+      cat sentinel.conf &&
+      redis-server sentinel.conf --sentinel"
+    links:
+      - master
+    ports:
+      - 26379:26379
+  sentinel1:
+    image: redis
+    command: >
+      bash -c "echo 'port 26380' > sentinel.conf &&
+      echo 'dir /tmp' >> sentinel.conf &&
+      echo 'sentinel announce-ip 128.21.33.43' >> sentinel.conf &&
+      echo 'sentinel announce-port 26380' >> sentinel.conf &&
+      echo 'sentinel monitor mymaster 128.21.33.43 6379 2' >> sentinel.conf &&
+      echo 'sentinel down-after-milliseconds mymaster 5000' >> sentinel.conf &&
+      echo 'sentinel parallel-syncs mymaster 1' >> sentinel.conf &&
+      echo 'sentinel failover-timeout mymaster 5000' >> sentinel.conf &&
+      cat sentinel.conf &&
+      redis-server sentinel.conf --sentinel"
+    links:
+      - master
+    ports:
+      - 26380:26380
+  sentinel2:
+    image: redis
+    command: >
+      bash -c "echo 'port 26381' > sentinel.conf &&
+      echo 'dir /tmp' >> sentinel.conf &&
+      echo 'sentinel announce-ip 128.21.33.43' >> sentinel.conf &&
+      echo 'sentinel announce-port 26381' >> sentinel.conf
+      echo 'sentinel monitor mymaster 128.21.33.43 6379 2' >> sentinel.conf &&
+      echo 'sentinel down-after-milliseconds mymaster 5000' >> sentinel.conf &&
+      echo 'sentinel parallel-syncs mymaster 1' >> sentinel.conf &&
+      echo 'sentinel failover-timeout mymaster 5000' >> sentinel.conf &&
+      cat sentinel.conf &&
+      redis-server sentinel.conf --sentinel"
+    links:
+      - master
+    ports:
+      - 26381:26381
+
+

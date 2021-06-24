@@ -1,0 +1,37 @@
+nginx-cosmos-01            128.21.24.64
+loadbalancer-cosmos-01     128.21.24.53
+ master-cosmos-01           128.21.24.50
+ master-cosmos-02           128.21.24.51
+ master-cosmos-03           128.21.24.52
+ node-cosmos-01             128.21.24.54
+ node-cosmos-02             128.21.24.55
+ node-cosmos-03             128.21.24.56
+ node-cosmos-04             128.21.24.57
+ node-cosmos-05             128.21.24.58
+ node-cosmos-06             128.21.24.59
+repo-cosmos-01             128.21.24.60
+kafka-cosomos-01           128.21.24.62
+automation-cosmos-01       128.21.24.61
+
+
+
+ebserver/pdfind /ebserver.sinarmaslife.co.id
+mailpool
+storage/temp \\storage.sinarmasmsiglife.co.id\
+
+
+Env Production
+ip-public : orion-api.sinarmasmsiglife.co.id
+ip-public : vega-api.sinarmasmsiglife.co.id
+
+fajar
+ip-public : nonf2f.sinarmasmsiglife.co.id
+
+spica/nebula
+ip-public  : spica.sinarmasmsiglife.co.id (ip internal)
+ip-internal: 
+etl,spica,screening,
+
+
+
+

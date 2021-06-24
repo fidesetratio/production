@@ -1,0 +1,2 @@
+https://www.novatec-gmbh.de/en/blog/scale-your-spring-boot-application-in-kubernetes/
+https://hackernoon.com/how-to-use-prometheus-adapter-to-autoscale-custom-metrics-deployments-p1p3tl0

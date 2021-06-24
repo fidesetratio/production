@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: monitoring-hook
+  labels:
+    app: monitoring-hook
+  namespace: msigmonitoring
+spec:
+  selector:
+   app: monitoring-hook
+  ports:
+  - name: web
+    port: 8080

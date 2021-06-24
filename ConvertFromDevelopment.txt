@@ -1,0 +1,82 @@
+
+reffspec
++refs/tags/*:refs/remotes/origin/tags/*
+
+**/tags/**
+
+
+
+http://128.21.24.61:8081/generic-webhook-trigger/invoke?token=orion-06-api-public-information
+
+
+gethost
+    
+    remote.name = 'automation'
+    remote.host = '128.21.24.61'
+    remote.user = 'administrator'
+    remote.port = 22
+    remote.password = 'P@ssw0rd'
+
+
+env
+
+PIPELINE_EUREKA_SERVICE_ADDRESS = "http://eureka-0.eureka.cosmos.svc.cluster.local:8080/eureka,http://eureka-1.eureka.cosmos.svc.cluster.local:8080/eureka,http://eureka-2.eureka.cosmos.svc.cluster.local:8080/eureka,http://eureka-3.eureka.cosmos.svc.cluster.local:8080/eureka,http://eureka-4.eureka.cosmos.svc.cluster.local:8080/eureka,http://eureka-5.eureka.cosmos.svc.cluster.local:8080/eureka"
+
+ def latestTag = sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
+ PIPELINE_IMAGE = "128.21.24.60:8087/${env.PIPELINE_NAME_SPACE}/${env.PIPELINE_BUILD_IMAGE}:${env.BUILD_NUMBER}"
+
+
+checkout
+checkout([
+                        $class                           : 'GitSCM',
+                        branches                         : [[name: "refs/tags/${latestTag}"]],
+                        userRemoteConfigs                : [[credentialsId: 'gitcredentialadmin', url: 'http://128.21.24.60:8888/cosmos/api-otp']],
+                        doGenerateSubmoduleConfigurations: false
+                ])
+
+
+
+
+
+
+
+http://128.21.24.61:8081/generic-webhook-trigger/invoke?token=orion-11-api-spaj
+
+
+deployment.yaml
+  replicas: ${PIPELINE_REPLICA}
+  strategy:
+   type: RollingUpdate
+   rollingUpdate:
+     maxSurge: 1
+     maxUnavailable: 0
+
+ 
+         ports:
+            - containerPort: 9092
+          resources:
+           requests:
+             memory: "50Mi"
+             cpu: "500m"
+           limits:
+             memory: "500Mi"
+             cpu: "2000m"
+ 
+
+autoscaling
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ${PIPELINE_BUILD_IMAGE}
+  namespace: ${PIPELINE_NAME_SPACE}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ${PIPELINE_BUILD_IMAGE}
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 75
+
+

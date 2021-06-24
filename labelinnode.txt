@@ -1,0 +1,4 @@
+kubectl label node k8s-node-1 nodename=k8s-node-1
+assign node ke 
+  nodeSelector:
+    nodename: k8s-node-1

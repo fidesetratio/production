@@ -1,0 +1,25 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: app-player
+  namespace: msigmonitoring
+  labels:
+    team: devops-by-example 
+spec:
+  selector:
+    matchLabels:
+      app: app-player
+  namespaceSelector:
+    any: true
+  endpoints:
+  - port: web
+    path: /actuator/prometheus
+    interval: 10s
+    honorLabels: true
+#kubectl create clusterrolebinding cluster-admin-binding --clusterrole=cluster-admin --user=system:serviceaccount:msigmonitoring:prometheus-operator
+#please refer to 4.service-monitor-springboot
+#makesure everything deploy to namespace msigmonitoring
+#docker build -t jeanmorais/app-player:0.0.1 .
+
+

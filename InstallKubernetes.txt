@@ -1,0 +1,54 @@
+Server cosmos 01 ==> Master
+Ip address : 128.21.24.20
+Username : administrator
+Password : P@ssw0rd
+
+Server cosmos 02 ==> Worker
+Ip address : 128.21.24.21
+Username : administrator
+Password : P@ssw0rd
+
+
+On both Master and Worker
+
+Login as root user
+1.Login as root user
+  sudo su -
+2.Disable Firewall
+ ufw 
+   * ufw status
+   * ufw disable
+3.Disable swap
+ swap
+  * swapon -s
+  * cat /etc/fstab | grep swap or sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+  * swapoff -a && sed -i '/swap/d' /etc/fstab
+4.Update sysctl settings for Kubernetes networking
+  systcl
+   * cat >>/etc/sysctl.d/kubernetes.conf<<EOF
+     net.bridge.bridge-nf-call-ip6tables = 1
+     net.bridge.bridge-nf-call-iptables = 1
+     EOF
+   * sysctl --system
+
+5.Install docker engine
+  * apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+  * curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+  * add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  * apt update
+  * apt install -y docker-ce=5:19.03.10~3-0~ubuntu-focal containerd.io
+  * systemctl status docker ==> need active
+6.Kubernetes Setup - Add Apt Repository
+  * curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+  * echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list
+7.Kubernetes Setup - Install Kubernetes components
+  * apt update && apt install -y kubeadm=1.18.5-00 kubelet=1.18.5-00 kubectl=1.18.5-00
+
+
+Only Master
+1. Initialize Kubernetes Cluster
+  * kubeadm init --apiserver-advertise-address=<ip_master> --pod-network-cidr=192.168.0.0/16  --ignore-preflight-errors=all
+    ex : kubeadm init --apiserver-advertise-address=128.21.24.20 --pod-network-cidr=192.168.0.0/16  --ignore-preflight-errors=all
+	kubeadm init \
+  --pod-network-cidr=192.168.0.0/16 \
+  --control-plane-endpoint=128.21.24.20

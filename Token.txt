@@ -1,0 +1,37 @@
+kubeadm join 128.21.24.30:6443 --token 7stcgq.jgzudg2gioad24zp \
+    --discovery-token-ca-cert-hash sha256:65ae6e7777262001f0d56f05924973c1a2802aafcaee7c0d585801a6ece19909
+
+
+token  multi master dan multi node
+
+root@master-cosmos-02:~#  kubeadm join 128.21.24.53:6443 --token g9iyan.1id63ivc                                                                             ui45132p \
+>     --discovery-token-ca-cert-hash sha256:0b5c8efc8b2d4d556397aa2bbe0c259620a0                                                                             104a46558819523ac269e057e548 \
+>     --control-plane --certificate-key 88402b0d935039c8edad1d0ee879a3859d7fc66b111b348d5150feac12eacf5f   
+ --apiserver-advertise-address=128.21.24.51
+
+
+ kubeadm join 128.21.24.53:6443 --token g9iyan.1id63ivcui45132p 
+ --discovery-token-ca-cert-hash sha256:0b5c8efc8b2d4d556397aa2bbe0c259620a0104a46558819523ac269e057e548
+
+
+================
+kubeadm join 128.21.24.53:6443 --token zdzppg.igebq5obl4s83xf0 \
+    --discovery-token-ca-cert-hash sha256:08a29f00837431f201871fb55c793caadfcd4f4a70b09182d2ad82f4d81ba8c5 \
+    --control-plane --certificate-key 1661593248b62a86ac33f6b2f195dd51d090ff144983b22c4f3bb42dfc1c3167 \
+    --apiserver-advertise-address=128.21.24.52 
+
+alternative
+
+kubeadm join 128.21.24.53:6443 --token zdzppg.igebq5obl4s83xf0 \
+    --discovery-token-ca-cert-hash sha256:08a29f00837431f201871fb55c793caadfcd4f4a70b09182d2ad82f4d81ba8c5 \
+    --control-plane \
+    --apiserver-advertise-address=128.21.24.51 
+
+
+worker only
+
+kubeadm join 128.21.24.53:6443 --token zdzppg.igebq5obl4s83xf0 \
+    --discovery-token-ca-cert-hash sha256:08a29f00837431f201871fb55c793caadfcd4f4a70b09182d2ad82f4d81ba8c5
+
+
+

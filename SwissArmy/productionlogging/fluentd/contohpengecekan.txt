@@ -1,0 +1,1 @@
+kubernetes.namespace_name: default and stream: stdout and kubernetes.pod_name : counter and log: 1328

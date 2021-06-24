@@ -1,0 +1,99 @@
+C:\pekerjaan\pekerjaan\pekerjaan\Project\Project\FondasiMicroservice
+
+
+Need to make sure automatic visudo running without password
+  - sudo visudo
+  - %sudo   ALL=(ALL:ALL) ALL NOPASSWD:ALL
+
+
+Please do in master & node
+Presequite
+
+0. Set configuration in each node
+   - vim /etc/hosts
+   128.21.24.21    cosmos
+
+1. Storage Connection
+   ebstorage 
+   * CIFS & SAMBA CONNECTION
+   - sudo apt install -y cifs-utils samba-common
+   - sudo mkdir /mnt/storage
+   - sudo mount -t cifs -o username=ajsjava,password=ajsjava,iocharset=utf8,file_mode=0775,uid=1000 //128.21.33.32/pdfind /mnt/storage
+   - sudo mkdir /mnt/ebstorage
+   - sudo mount -t cifs -o username=ajsjava,password=ajsjava,vers=1.0,iocharset=utf8,file_mode=0775,uid=1000 //128.21.33.12/pdfind /mnt/ebstorage
+   - sudo mkdir /mnt/mailpool
+   - sudo mount -t cifs -o username=ajsjava,password=ajsjava,iocharset=utf8,file_mode=0775,uid=1000 //128.21.33.32/mailpools/attachment /mnt/mailpool
+
+   use fstab so reboot can be done
+    - sudo nano /etc/fstab
+    - 
+    - add this line
+	//128.21.33.32/pdfind /mnt/storage cifs username=ajsjava,password=ajsjava,iocharset=utf8,file_mode=0775,uid=1000 0 0
+        //128.21.33.12/pdfind /mnt/ebserver cifs username=ajsjava,password=ajsjava,vers=1.0,iocharset=utf8,file_mode=0775,uid=1000 0 0
+	//128.21.33.32/mailpools/attachment /mnt/mailpool cifs username=ajsjava,password=ajsjava,iocharset=utf8,file_mode=0775,uid=1000 0 0
+   
+   - sudo mkdir /mnt/storage
+   - sudo mkdir /mnt/ebserver
+   - sudo mkdir /mnt/mailpool
+
+   - sudo mount /mnt/storage
+   - sudo mount /mnt/ebserver
+   - sudo mount /mnt/mailpool
+
+     or
+
+  sudo mount /mnt/storage ; sudo mount /mnt/ebstorage ; sudo mount /mnt/mailpool
+
+2. Docker Instalation 
+   - sudo apt-get update
+   - sudo apt install -y docker.io
+   - sudo systemctl enable docker.service --now
+   - systemctl status docker
+   - docker --version
+
+   To Uninstall Docker
+    sudo usermod -aG docker ${USER}
+    sudo apt-get remove docker docker-engine docker.io containerd runc
+    sudo apt-cache policy docker.io
+    sudo apt purge docker.io
+    sudo apt autoremove
+
+
+   Instal with spesific version 19.03.8
+      sudo apt install docker-ce=5:19.03.9~3-0~ubuntu-focal docker-ce-cli=5:19.03.9~3-0~ubuntu-focal containerd.io
+
+
+
+3. Instalation of kubeadm
+https://computingforgeeks.com/deploy-kubernetes-cluster-on-ubuntu-with-kubeadm/
+   - Make sure Disable swap and enable IP forwarding on all nodes
+     * sudo vi /etc/fstab
+     * remark swap.img
+     * Run swapoff command to disable the swap on the fly
+   - Make sure enable To enable the ip forwarding permanently
+     * sudo vim /etc/sysctl.conf
+     * uncomment net.ipv4.ip_forward=1
+     * sudo sysctl -p
+
+  
+   - uninstall kubernetes
+     kubeadm reset
+     sudo apt-get purge kubeadm kubectl kubelet kubernetes-cni kube*   
+     sudo apt-get autoremove  
+     sudo rm -rf ~/.kub
+
+
+
+   - Install spesific kubernetes
+     UAT Version v1.19.4
+     Production Version v1.19.4
+   * curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - && \
+     echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list && \
+     sudo apt-get update -q && \
+     sudo apt-get install -qy kubelet=1.19.4-00 kubectl=1.19.4-00 kubeadm=1.19.4-00
+   * cek version
+     kubectl version --client && kubeadm version
+
+   * start it
+     sudo kubeadm init
+

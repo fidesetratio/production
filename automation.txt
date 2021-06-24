@@ -1,0 +1,96 @@
+def getHost(){
+    def remote = [:]
+    remote.name = 'automation'
+    remote.host = '128.21.24.61'
+    remote.user = 'administrator'
+    remote.port = 22
+    remote.password = 'P@ssw0rd'
+    remote.allowAnyHosts = true
+    return remote
+}
+
+pipeline {
+    agent any
+      environment {
+           PIPELINE_NAME_SPACE = "cosmos"
+           def server = ''
+           def name_space = "${env.PIPELINE_NAME_SPACE}"
+           def gitlab_branch = "${env.gitlabBranch}"
+           def latestTag = sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
+           def typeDeployment = "${params.Deployment}"
+           def tagVersion = "${params.Version}"
+
+       }
+
+    stages {
+        stage('Set Variable'){
+            when {
+                     expression { typeDeployment == "Manual" && tagVersion != "None" }
+                }
+            steps{
+              script{
+                latestTag = tagVersion  
+                }
+              sh "echo manual tagging begin with latesttag = ${latestTag} with tagversion = ${tagVersion}"
+            }
+
+        }
+        stage('Checkout') {
+            steps {
+                script {                 
+                   server = getHost()                                   
+                }
+                
+
+            
+
+//                 git credentialsId: 'gitcredentialadmin', url: 'http://128.21.24.60:8888/cosmos/instalation'
+                 sh "echo 'tagging begin'"
+                 sh "echo ${gitlab_branch}"               
+                 sh "echo ${latestTag}"               
+                 sh "echo ${typeDeployment}"
+                 checkout([
+                        $class                           : 'GitSCM',
+                        branches                         : [[name: "refs/tags/${latestTag}"]],
+                        userRemoteConfigs                : [[credentialsId: 'gitcredentialadmin', url: 'http://128.21.24.60:8888/cosmos/instalation']],
+                        doGenerateSubmoduleConfigurations: false
+                ])
+
+
+            }
+        }
+        
+    stage("replace Env"){
+        steps{
+        	sh "printenv"
+            echo "replace env"
+            sh "ls k8s/"
+            sh "envsubst < k8s/deployment.yaml > k8s/deployment1${name_space}.yaml "
+            sh "cat k8s/deployment1${name_space}.yaml"            
+            sh "pwd"
+            sh "ls -f k8s/"  
+        }
+    }
+    
+    stage('deploy to kubernetes') {
+            steps {
+                sh "ls"
+                 script {
+                   sshPut remote: server, from: "k8s/deployment1${name_space}.yaml", into: '.'
+                   sshCommand remote: server, command: "mv deployment1${name_space}.yaml deployment${name_space}.yaml"                
+                   sshCommand remote: server, command: "kubectl apply -f deployment${name_space}.yaml"
+                }
+           }
+           
+
+    }
+    
+}
+}
+
+
+reffspec : 
++refs/tags/*:refs/remotes/origin/tags/*
+
+Branch Specifier (blank for 'any')
+**/tags/**

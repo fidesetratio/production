@@ -1,0 +1,26 @@
+1.The connection to the server localhost:8080 was refused - did you specify the right host or port?
+
+Answer :
+
+Test pake ini : 
+cd ~/.kube
+cd ~
+scp administrator@128.21.33.43:/home/administrator/.kube/config .
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/
+
+
+
+1. k8s-master   Ready      master   176d   v1.19.4
+   k8s-node-0   NotReady   <none>   175d   v1.19.4
+   k8s-node-1   NotReady   <none>   175d   v1.19.4
+
+Answer :
+
+https://blog.dbi-services.com/kubernetes-dns-resolution-using-coredns-force-update-deployment/
+delete force
+coredns-777c65b9f6-9d44m
+
+or 
+
+https://stackoverflow.com/questions/59434033/kubernetes-api-server-is-failing-to-start-api-servermaster-host-host-not-foun

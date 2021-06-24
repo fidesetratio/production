@@ -1,0 +1,15 @@
+kubectl get namespace "cosmos" -o json \
+  | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/" \
+  | kubectl replace --raw /api/v1/namespaces/cosmos/finalize -f -
+
+
+kubectl get namespace "cosmos-test" -o json \
+  | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/" \
+  | kubectl replace --raw /api/v1/namespaces/cosmos-test/finalize -f -
+
+
+
+kubectl get namespace "custom-metrics" -o json \
+  | tr -d "\n" | sed "s/\"finalizers\": \[[^]]\+\]/\"finalizers\": []/" \
+  | kubectl replace --raw /api/v1/namespaces/custom-metrics/finalize -f -
+
