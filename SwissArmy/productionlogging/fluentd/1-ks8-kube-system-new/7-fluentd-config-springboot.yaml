@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-monitoring-hook-conf
+  namespace: msigmonitoring
+data:
+  fluent.conf: |-
+      <source>
+        @type tail
+        path /opt/logs/*.log
+        pos_file /tmp/spring.pos
+        tag boot
+      </source>
+
+
+      <match boot>
+      @type elasticsearch
+      host "#{ENV['FLUENT_ELASTICSEARCH_HOST'] || 'elasticsearch.elastic-kibana'}"
+      port "#{ENV['FLUENT_ELASTICSEARCH_PORT'] || '9200'}"
+      index_name fluentd-monitoring-hook
+      type_name fluentd
+      </match>
+
+
