@@ -1,0 +1,14 @@
+develompent
+
+http://128.21.33.43:8888/orion   
+http://128.21.33.43:8081/view/Orion/
+
+
+Production
+https://orion-api.sinarmasmsiglife.co.id
+http://128.21.36.73:8687/swagger-ui.html
+http://128.21.24.60:8888/orion ==> gitlab
+http://128.21.24.61:8081/view/Orion/ ==> jenkins
+http://128.21.36.71:8687/ ==> eureka baru
+
+

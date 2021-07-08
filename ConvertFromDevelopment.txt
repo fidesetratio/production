@@ -80,3 +80,4 @@ spec:
   targetCPUUtilizationPercentage: 75
 
 
+kubectl apply -f deployment${name_space}${build_image}.yaml --record=true
